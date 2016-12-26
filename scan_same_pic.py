@@ -11,6 +11,7 @@
 
 import os
 import hashlib
+import sys
 
 # key 文件的md5值，value 所有的文件
 g_dict = {'':[]}
@@ -40,15 +41,23 @@ def walk_dir(path):
 def check_dict():
 	global g_dict
 	count = 0
+        same_item_total_size = 0
+        same_item_pure_size = 0
 	for k, v in g_dict.items():
 		if len(v) > 1:
 			count = count + 1
 			print k, v
+                        same_item_pure_size = same_item_pure_size + os.path.getsize(v[0])
+                        same_item_total_size = same_item_total_size + len(v) * os.path.getsize(v[0])
 
-	print 'count:%d' % count
+        print 'count:%d--total size:%d--pure size:%d' % (count, same_item_total_size, same_item_pure_size)
 
 if __name__ == "__main__":
 	# global g_dict
-	walk_dir('..')
-	check_dict()
+        dir=sys.argv[1]
+        if (os.path.exists(dir)):
+	    walk_dir(dir)
+	    check_dict()
+        else:
+            print 'Please input correct directory!'
 
